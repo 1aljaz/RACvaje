@@ -1,0 +1,93 @@
+Dostava
+	- DostavaID
+	- Datum
+	
+	create table dostava(dostavaID int primary key auto_increment, datum Date not null);
+	
+Menu
+	- MenuID
+	- Datum
+	
+	create table menu(menuID int primary key auto_increment, Datum Date not null);
+	
+
+Hrana
+	- HranaID PK
+	- Ime
+	- Status
+	- Cena
+	- MenuID FK
+	
+	create table hrana(hranaID int primary key auto_increment, ime varchar(30) not null, status varchar(30) not null, cena float(5,2) not null, menuID int,
+						constraint hrana_menuID_fk foreign key (menuID) references menu(menuID));
+	
+Dostavljalec
+	- DostavljalecID
+	- Firma
+	- Kontakt
+	- DostavaID FK
+	
+	create table dostavljalec(dostavljalecID int primary key auto_increment, firma varchar(30) not null, kontakt varchar(30) not null, 
+							  dostavaID int not null, constraint dostavljalec_dostavaID_fk foreign key(dostavaID) references dostava(dostavaID));
+
+Stranka
+	- StrankaID PK
+	- Ime
+	- Priimek
+	- Naslov
+	- Telefonska številka
+	- Št Mize
+	- Davčna
+	
+	create table stranka(strankaID int primary key auto_increment, ime varchar(30) not null, priimek varchar(30) not null, naslov varchar(30), telefonskaSt varchar(30) not null,
+						stMize int not null, davcna varchar(30) not null);
+	
+Placilo
+	- PlaciloID
+	- Cena
+	- Datum
+	- StrankaID FK
+	- DostavaID FK
+	
+	create table placilo(placiloID int primary key auto_increment, cena float(5,2), datum Date not null, strankaID int, dostavaID int,
+						constraints placilo_strankaID_fk foreign key(strankaID) references stranka(strankaID),
+						constraints placilo_dostavaID_fk foreign key(dostavaID) references dostava(dostavaID));
+	
+Osebje
+	- OsebjeID
+	- Ime
+	- Priimek
+	- Kontakt
+	- Naslov
+	- Uporabniško ime
+	- Plača
+	
+	create table osebje(osebjeID int primary key auto_increment, ime varchar(30) not null, priimek varchar(30) not null, username varchar(30) not null, placa float(5,2));
+	
+Narocilo
+	- NarociloID
+	- Datum
+	- Status
+	- StrankaID FK
+	- OsebjeID FK
+	- HranaID FK
+	- MenuID FK
+	
+	create table narocilo(narociloID int primary key auto_increment, datum Date not null, status varchar(30) not null, strankaID int, osebjeID int, hranaID int, menuID int,
+						 constraint narocilo_strankaID_fk foreign key(strankaID) references stranka(strankaID),
+						 constraint narocilo_osebjeID_fk foreign key(osebjeID) references osebje(osebjeID),
+						 constraint narocilo_hranaID_fk foreign key(hranaID) references hrana(hranaID),
+						 constraint narocilo_menuID_fk foreign key(menuID) references menu(menuID));
+	
+Transakcija
+	- TransakcijaID
+	- Datum
+	- StrankaID FK
+	- OsebjeID FK
+	- Narocilo FK
+	
+	create table transakcija(transakcijaID int primary key auto_increment, datum Date not null, strankaID int, osebjeID int, narociloID int,
+							 constraint transakcija_strankaID_fk foreign key (strankaID) references stranka(strankaID),
+							 constraint transakcija_osebjeID_fk foreign key (osebjeID) references osebje(osebjeID),
+							 constraint transakcija_narociloID_fk foreign key (narociloID) references narocilo(narociloID));
+	
